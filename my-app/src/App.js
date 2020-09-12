@@ -1,20 +1,25 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  withRouter,
+} from "react-router-dom";
 
 import Users from "./pages/Users";
 import MainNavigation from "./common/Navigation/MainNavigation";
+import UserPlaces from "./pages/places/UserPlaces";
 
 const App = () => {
   return (
     <Router>
       <MainNavigation />
-      <Switch>
-        <main>
-          <Route path="/">
-            <Users />
-          </Route>
-        </main>
-      </Switch>
+      <main>
+        <Switch>
+          <Route path="/" component={Users} exact />
+          <Route path="/:userId/places" component={UserPlaces} exact />
+        </Switch>
+      </main>
     </Router>
   );
 };

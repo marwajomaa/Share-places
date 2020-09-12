@@ -12,7 +12,7 @@ const NavLinks = () => {
         </NavLink>
       </li>
       <li>
-        <NavLink to="/1/places">MY PLACES</NavLink>
+        <NavLink to="/u1/places">MY PLACES</NavLink>
       </li>
       <li>
         <NavLink to="/places/new">ADD PLACE</NavLink>

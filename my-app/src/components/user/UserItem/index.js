@@ -4,18 +4,18 @@ import Avatar from "../../../common/Avatar";
 import Card from "./../../../common/Card";
 import "./UserItem.css";
 
-const UserItem = (props) => {
+const UserItem = ({ id, image, name, placesCount }) => {
   return (
     <li className="user-item">
       <Card className="user-item__content">
-        <Link to={`/${props.id}/places`}>
+        <Link to={`/${id}/places`}>
           <div className="user-item__image">
-            <Avatar image={props.image} alt={props.name} />
+            <Avatar image={image} alt={name} />
           </div>
           <div className="user-item__info">
-            <h2>{props.name}</h2>
+            <h2>{name}</h2>
             <h3>
-              {props.placesCount} {props.placesCount === 1 ? "place" : "places"}
+              {placesCount} {placesCount === 1 ? "place" : "places"}
             </h3>
           </div>
         </Link>
