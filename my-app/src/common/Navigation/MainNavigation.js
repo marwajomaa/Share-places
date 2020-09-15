@@ -5,6 +5,7 @@ import MainHeader from "./MainHeader";
 import NavLinks from "./NavLinks";
 import SideDrawer from "./SideDrawer";
 import Backdrop from "../Backdrop";
+import Title from "../Title";
 
 import "./MainNavigation.css";
 
@@ -36,7 +37,9 @@ const MainNavigation = (props) => {
           <span />
         </button>
         <h1 className="main-navigation__title">
-          <Link to="/">YourPlaces</Link>
+          <Link to="/">
+            <Title />
+          </Link>
         </h1>
         <nav className="main-navigation__header-nav">
           <NavLinks />
