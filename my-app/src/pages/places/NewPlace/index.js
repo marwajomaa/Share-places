@@ -44,6 +44,10 @@ const NewPlace = () => {
         value: "",
         isValid: false,
       },
+      description: {
+        value: "",
+        isValid: false,
+      },
     },
     isFormValid: false,
   });
