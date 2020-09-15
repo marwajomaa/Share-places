@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { places } from "../../../constants/places";
 import Input from "../../../common/Input";
 import Button from "../../../common/Button";
+import Card from "../../../common/Card";
 import { useForm } from "../../../hooks/form-hook";
 import {
   VALIDATOR_REQUIRE,
@@ -29,26 +30,30 @@ const UpdatePlace = () => {
   );
 
   useEffect(() => {
-    setFormData(
-      {
-        title: {
-          value: identifiedPlace.title,
-          isValid: true,
+    if (identifiedPlace) {
+      setFormData(
+        {
+          title: {
+            value: identifiedPlace.title,
+            isValid: true,
+          },
+          description: {
+            value: identifiedPlace.description,
+            isValid: true,
+          },
         },
-        description: {
-          value: identifiedPlace.description,
-          isValid: true,
-        },
-      },
-      true,
-      setIsLoading(false)
-    );
+        true
+      );
+    }
+    setIsLoading(false);
   }, [setFormData, identifiedPlace]);
 
   if (!identifiedPlace) {
     return (
-      <div className="center">
-        <h2>No place found!</h2>
+      <div className="center" style={{ maxWidth: "400px", margin: "0 auto" }}>
+        <Card>
+          <h2>No place found!</h2>
+        </Card>
       </div>
     );
   }
