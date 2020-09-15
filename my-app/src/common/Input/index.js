@@ -6,6 +6,7 @@ import "./style.css";
 
 const inputReducer = (state, action) => {
   const { type, value, validators } = action;
+  console.log(type, value, validators, "iiiiiiiiiinput");
   switch (type) {
     case "CHANGE":
       return {
@@ -40,9 +41,10 @@ const Input = (props) => {
 
   const { id, onInput } = props;
   const { value, isValid } = inputState;
+  console.log({ value: value, isValid: isValid });
 
   useEffect(() => {
-    onInput(id, isValid, value);
+    onInput(id, value, isValid);
   }, [id, value, isValid, onInput]);
 
   const touchHandler = () => {
