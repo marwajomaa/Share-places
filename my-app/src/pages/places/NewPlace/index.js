@@ -2,40 +2,16 @@ import React, { useCallback, useReducer } from "react";
 
 import Input from "../../../common/Input";
 import Button from "../../../common/Button";
+import { useForm } from "../../../hooks/form-hook";
 import {
   VALIDATOR_MINLENGTH,
   VALIDATOR_REQUIRE,
 } from "../../../utils/validators";
 import "./style.css";
 
-const formReducer = (state, action) => {
-  const { type } = action;
-  switch (type) {
-    case "INPUT_CHANGE":
-      let formIsValid = true;
-      for (const inputId in state.inputs) {
-        if (inputId === action.inputId) {
-          formIsValid = formIsValid && action.isValid;
-        } else {
-          formIsValid = formIsValid && state.inputs[inputId].isValid;
-        }
-      }
-      return {
-        ...state,
-        inputs: {
-          ...state.inputs,
-          [action.inputId]: { value: action.value, isValid: action.isValid },
-        },
-        isFormValid: formIsValid,
-      };
-    default:
-      return state;
-  }
-};
-
 const NewPlace = () => {
-  const [formState, dispatch] = useReducer(formReducer, {
-    inputs: {
+  const [formState, inputHandler] = useForm(
+    {
       title: {
         value: "",
         isValid: false,
@@ -44,22 +20,13 @@ const NewPlace = () => {
         value: "",
         isValid: false,
       },
-      description: {
+      address: {
         value: "",
         isValid: false,
       },
     },
-    isFormValid: false,
-  });
-
-  const inputHandler = useCallback((id, value, isValid) => {
-    dispatch({
-      type: "INPUT_CHANGE",
-      inputId: id,
-      isValid: isValid,
-      value: value,
-    });
-  }, []);
+    false
+  );
 
   const placeSubmitHandler = (e) => {
     e.preventDefault();
