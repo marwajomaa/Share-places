@@ -1,10 +1,5 @@
-import React, { useEffect, useState, useCallback } from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  withRouter,
-} from "react-router-dom";
+import React, { useState, useCallback } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import Users from "./pages/Users";
 import MainNavigation from "./common/Navigation/MainNavigation";
@@ -15,7 +10,7 @@ import Auth from "./pages/Users/Auth";
 import { AuthContext } from "./context/auth-context";
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = setState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const login = useCallback(() => {
     setIsLoggedIn(true);
@@ -24,8 +19,11 @@ const App = () => {
   const logout = useCallback(() => {
     setIsLoggedIn(false);
   }, []);
+
   return (
-    <AuthContext.provider value={(isLoggedIn, login, logout)}>
+    <AuthContext.Provider
+      value={{ isLoggedIn: isLoggedIn, login: login, logout: logout }}
+    >
       <Router>
         <MainNavigation />
         <main>
@@ -38,7 +36,7 @@ const App = () => {
           </Switch>
         </main>
       </Router>
-    </AuthContext.provider>
+    </AuthContext.Provider>
   );
 };
 
