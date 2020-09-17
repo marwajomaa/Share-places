@@ -32,6 +32,8 @@
 .form-control--invalid label,
 .form-control--invalid p {
   color: red;
+  margin-bottom: 0.5rem;
+  text-align: left;
 }
 
 .form-control--invalid input,

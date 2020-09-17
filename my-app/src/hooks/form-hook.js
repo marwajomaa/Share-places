@@ -2,12 +2,14 @@ import { useCallback, useReducer } from "react";
 
 //similar to redux have reducer and action to update the state
 const formReducer = (state, action) => {
-  console.log(action.formIsValid, "----------0");
   const { type } = action;
   switch (type) {
     case "INPUT_CHANGE":
       let formIsValid = true;
       for (const inputId in state.inputs) {
+        if (!state.inputs[inputId]) {
+          continue;
+        }
         if (inputId === action.inputId) {
           formIsValid = formIsValid && action.isValid;
         } else {
@@ -24,7 +26,6 @@ const formReducer = (state, action) => {
       };
     case "SET_DATA":
       return {
-        ...state,
         inputs: action.inputs,
         isFormValid: action.formIsValid,
       };
@@ -40,6 +41,7 @@ export const useForm = (initialInputs, initialFormValidity) => {
   });
 
   const inputHandler = useCallback((id, value, isValid) => {
+    console.log(id, value, isValid);
     dispatch({
       type: "INPUT_CHANGE",
       inputId: id,

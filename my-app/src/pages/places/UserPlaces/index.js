@@ -7,7 +7,6 @@ import { places } from "../../../constants/places";
 const UserPlaces = () => {
   const userId = useParams().userId;
   const filteredPlaces = places.filter((place) => place.creator === userId);
-  console.log(filteredPlaces, "-----------------");
   return (
     <>
       <Title label="Your Places" />

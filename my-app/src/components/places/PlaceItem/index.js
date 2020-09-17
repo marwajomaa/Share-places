@@ -9,10 +9,15 @@ import "./style.css";
 const PlaceItem = ({ place }) => {
   const { id, imageUrl, title, description, address } = place;
   const [showMap, setShowMap] = useState(false);
+  const [showWarningModal, setShowWarningModal] = useState(false);
 
   const openMapHandler = () => setShowMap(true);
 
   const closeMapHandler = () => setShowMap(false);
+
+  const openWarningModalHandler = () => setShowWarningModal(true);
+
+  const closeWarningModalHandler = () => setShowWarningModal(false);
 
   return (
     <>
@@ -26,6 +31,28 @@ const PlaceItem = ({ place }) => {
       >
         <div className="map-container">
           <Map lat={place.location.lat} lon={place.location.lon} />
+        </div>
+      </Modal>
+      <Modal
+        show={showWarningModal}
+        onCancel={closeWarningModalHandler}
+        header="Are you sure you want to delete this place?"
+        contentClass="place-item__modal-content"
+        footerClass="place-item__modal-actions"
+        footer={
+          <>
+            <Button onClick={closeWarningModalHandler}>Close</Button>
+            <Button onClick={() => {}} inverse>
+              Confirm
+            </Button>
+          </>
+        }
+      >
+        <div>
+          <p style={{ padding: "20px 10px" }}>
+            This place will be deleted permanently. Do you want to delete this
+            place?
+          </p>
         </div>
       </Modal>
       <li className="place-item">
@@ -43,7 +70,9 @@ const PlaceItem = ({ place }) => {
               VIEW ON MAP
             </Button>
             <Button to={`/places/${id}`}>EDIT</Button>
-            <Button danger>DELETE</Button>
+            <Button danger onClick={openWarningModalHandler}>
+              DELETE
+            </Button>
           </div>
         </Card>
       </li>

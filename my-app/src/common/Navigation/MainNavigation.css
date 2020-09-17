@@ -17,11 +17,6 @@
   background: white;
 }
 
-.main-navigation__title a {
-  color: white;
-  text-decoration: none;
-}
-
 .main-navigation__header-nav {
   display: none;
 }

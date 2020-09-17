@@ -1,12 +1,13 @@
 import React, { useReducer, useEffect } from "react";
+import { Input as AntdInput } from "antd";
 
 import { validate } from "../../utils/validators";
 
 import "./style.css";
+const { TextArea } = AntdInput;
 
 const inputReducer = (state, action) => {
   const { type, value, validators } = action;
-  console.log(type, value, validators, "iiiiiiiiiinput");
   switch (type) {
     case "CHANGE":
       return {
@@ -41,7 +42,6 @@ const Input = (props) => {
 
   const { id, onInput } = props;
   const { value, isValid } = inputState;
-  console.log({ value: value, isValid: isValid });
 
   useEffect(() => {
     onInput(id, value, isValid);
@@ -55,7 +55,7 @@ const Input = (props) => {
 
   const element =
     props.element === "input" ? (
-      <input
+      <AntdInput
         id={props.id}
         type={props.type}
         placeholder={props.placeholder}
@@ -64,7 +64,7 @@ const Input = (props) => {
         onBlur={touchHandler}
       />
     ) : (
-      <textarea
+      <TextArea
         id={props.id}
         rows={props.rows || 3}
         onChange={changeHandler}
@@ -81,7 +81,7 @@ const Input = (props) => {
     >
       <label htmlFor={props.id}>{props.label}</label>
       {element}
-      {!inputState.isValid && <p>{props.errorText}</p>}
+      {!inputState.isValid && inputState.isTouched && <p>{props.errorText}</p>}
     </div>
   );
 };
