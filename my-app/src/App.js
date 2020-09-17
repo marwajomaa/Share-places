@@ -1,5 +1,10 @@
 import React, { useState, useCallback } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from "react-router-dom";
 
 import Users from "./pages/Users";
 import MainNavigation from "./common/Navigation/MainNavigation";
@@ -11,7 +16,7 @@ import { AuthContext } from "./context/auth-context";
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  setTimeout(() => console.log(isLoggedIn), 3000);
   const login = useCallback(() => {
     setIsLoggedIn(true);
   }, []);
@@ -20,21 +25,36 @@ const App = () => {
     setIsLoggedIn(false);
   }, []);
 
+  let routes;
+
+  if (isLoggedIn) {
+    routes = (
+      <Switch>
+        <Route path="/" component={Users} exact />
+        <Route path="/:userId/places" component={UserPlaces} exact />
+        <Route path="/places/new" component={NewPlace} exact />
+        <Route path="/places/:pId" component={UpdatePlace} exact />
+        <Redirect to="/" />
+      </Switch>
+    );
+  } else {
+    routes = (
+      <Switch>
+        <Route path="/" component={Users} exact />
+        <Route path="/:userId/places" component={UserPlaces} exact />
+        <Route path="/auth" component={Auth} exact />
+        <Redirect to="/auth" />
+      </Switch>
+    );
+  }
+
   return (
     <AuthContext.Provider
       value={{ isLoggedIn: isLoggedIn, login: login, logout: logout }}
     >
       <Router>
         <MainNavigation />
-        <main>
-          <Switch>
-            <Route path="/" component={Users} exact />
-            <Route path="/:userId/places" component={UserPlaces} exact />
-            <Route path="/places/new" component={NewPlace} exact />
-            <Route path="/places/:pId" component={UpdatePlace} exact />
-            <Route path="/auth" component={Auth} exact />
-          </Switch>
-        </main>
+        <main>{routes}</main>
       </Router>
     </AuthContext.Provider>
   );

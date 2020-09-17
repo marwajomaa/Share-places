@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 
 import Input from "../../../common/Input";
 import Button from "../../../common/Button";
@@ -10,9 +10,13 @@ import {
   VALIDATOR_MINLENGTH,
 } from "../../../utils/validators";
 import { useForm } from "../../../hooks/form-hook";
+import { AuthContext } from "../../../context/auth-context";
 import "./style.css";
 
-const Login = () => {
+const Auth = () => {
+  const auth = useContext(AuthContext);
+  const { login } = auth;
+
   const [isSignup, setIsSignup] = useState(false);
 
   const [formState, inputHandler, setFormData] = useForm(
@@ -53,11 +57,12 @@ const Login = () => {
     setIsSignup(!isSignup);
   };
 
-  const loginSubmitHandler = (e) => {
+  const authSubmitHandler = (e) => {
     e.preventDefault();
     console.log("====================================");
     console.log(formState.inputs, formState.isFormValid);
     console.log("====================================");
+    login();
   };
   return (
     <>
@@ -67,7 +72,7 @@ const Login = () => {
           isSignup ? "Signup for new account" : "Login Required"
         }`}</h2>
         <hr />
-        <form className="center" onSubmit={loginSubmitHandler}>
+        <form className="center" onSubmit={authSubmitHandler}>
           {isSignup && (
             <Input
               type="text"
@@ -109,4 +114,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Auth;
