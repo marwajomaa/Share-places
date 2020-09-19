@@ -20,6 +20,7 @@ app.use(express.static(`${__dirname}/public`));
 
 app.use("/api", router);
 
+//Middleware that handles error for unsupported routes
 app.use(async (req, res, next) => {
   const err = new HttpError("Could not find this route", 404);
   return next(err);
