@@ -17,9 +17,9 @@ router.get("/:id", (req, res, next) => {
     const place = dummyData.find((p) => p.id === id);
 
     if (!place) {
-      return res
-        .status(404)
-        .json({ status: "fail", message: "NO Places Found" });
+      const err = new Error("Could not find place for the provided id");
+      err.code = 404;
+      return next(err);
     }
     res.status(200).json({
       status: "success",
@@ -33,13 +33,23 @@ router.get("/:id", (req, res, next) => {
 
 //get specific place for specific user
 router.get("/user/:uId", (req, res, next) => {
-  const { uId } = req.params;
-  const place = dummyData.find((p) => p.creator === uId);
-  res.json({
-    status: "success",
-    message: `places middleware runs for ${uId}`,
-    data: place,
-  });
+  try {
+    const { uId } = req.params;
+    const place = dummyData.find((p) => p.creator === uId);
+
+    if (!place) {
+      const err = new Error("Could not find place for the provided user id");
+      err.code = 404;
+      return next(err);
+    }
+    res.json({
+      status: "success",
+      message: `places middleware runs for ${uId}`,
+      data: place,
+    });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 module.exports = router;

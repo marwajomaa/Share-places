@@ -17,4 +17,12 @@ app.use(express.static(`${__dirname}/public`));
 
 app.use("/api", router);
 
+app.use((err, req, res, next) => {
+  if (res.headerSent) {
+    return next(err);
+  }
+  res.status(err.code || 500);
+  res.json({ message: err.message || "AnUnKnown error has occurred" });
+});
+
 module.exports = app;
