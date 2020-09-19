@@ -2,6 +2,7 @@ const express = require("express");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const router = require("./routes");
+const HttpError = require("./models/http-error");
 
 const app = express();
 
@@ -18,6 +19,11 @@ app.use(bodyParser.json());
 app.use(express.static(`${__dirname}/public`));
 
 app.use("/api", router);
+
+app.use(async (req, res, next) => {
+  const err = new HttpError("Could not find this route", 404);
+  return next(err);
+});
 
 //Middleware that handles error for every request
 app.use((err, req, res, next) => {
