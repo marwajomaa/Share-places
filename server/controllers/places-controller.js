@@ -1,6 +1,6 @@
 const httpError = require("../models/http-error");
 
-const dummyData = [
+let dummyData = [
   {
     id: "p1",
     address: "jfhlzf",
@@ -29,12 +29,12 @@ exports.getPlaceById = async (req, res, next) => {
   }
 };
 
-exports.getPlaceByUSerId = async (req, res, next) => {
+exports.getPlacesByUSerId = async (req, res, next) => {
   try {
     const { uId } = req.params;
-    const place = dummyData.find((p) => p.creator === uId);
+    const places = dummyData.filter((p) => p.creator === uId);
 
-    if (!place) {
+    if (!places) {
       return next(
         new httpError("Could not find place for the provided user id", 404)
       );
@@ -42,7 +42,7 @@ exports.getPlaceByUSerId = async (req, res, next) => {
     res.json({
       status: "success",
       message: `places middleware runs for ${uId}`,
-      data: place,
+      data: places,
     });
   } catch (err) {
     console.log(err);
@@ -101,7 +101,7 @@ exports.deletePlace = async (req, res, next) => {
   const { pId } = req.params;
 
   try {
-    await dummyData.filter((p) => p.id !== pId);
+    dummyData = await dummyData.filter((p) => p.id !== pId);
     res.status(200).json({
       status: "success",
       message: "place has been deleted successfully",
