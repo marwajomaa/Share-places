@@ -11,8 +11,6 @@ const {
 
 router.get("/", getAllUsers);
 
-// router.get("/:uId", getUserById);
-
 router.post(
   "/signup",
   [
@@ -24,9 +22,5 @@ router.post(
 );
 
 router.post("/login", loginUser);
-
-// router.patch("/:uId", updateUser);
-
-// router.delete("/:uId", deleteUser);
 
 module.exports = router;

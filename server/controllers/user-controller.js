@@ -9,17 +9,6 @@ let DUMMY_USERS = [
   },
 ];
 
-exports.getAllUsers = async (req, res, next) => {
-  try {
-    res.status(200).json({ users: DUMMY_USERS });
-
-    if (!DUMMY_USERS) {
-      next(new HttpError("No users found", 404));
-    }
-  } catch (err) {
-    next(new HttpError("Something went wrong", 500));
-  }
-};
 exports.createUser = async (req, res, next) => {
   const errors = validationResult(req);
 
@@ -79,6 +68,6 @@ exports.loginUser = async (req, res, next) => {
       user: { user },
     });
   } catch (err) {
-    next(new HttpError("Something went wrong", 500));
+    next(new HttpError(err, 500));
   }
 };

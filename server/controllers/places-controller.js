@@ -26,7 +26,7 @@ exports.getPlaceById = async (req, res, next) => {
       data: place,
     });
   } catch (err) {
-    console.log(err);
+    return next(new HttpError(err, 404));
   }
 };
 
@@ -46,18 +46,19 @@ exports.getPlacesByUSerId = async (req, res, next) => {
       data: places,
     });
   } catch (err) {
-    console.log(err);
+    return next(new HttpError(err, 404));
   }
 };
 
 exports.createPlace = async (req, res, next) => {
   const errors = validationResult(req);
+
   if (!errors.isEmpty()) {
-    console.log(errors, "-------");
     return next(
       new HttpError("Invalid inputs passed. please check your data", 422)
     );
   }
+
   const { title, description, coordinates, address, creator } = req.body;
   const createdPlace = {
     id: Math.random(),
