@@ -1,4 +1,5 @@
 const express = require("express");
+const { check } = require("express-validator");
 
 const router = express.Router();
 
@@ -12,7 +13,15 @@ router.get("/", getAllUsers);
 
 // router.get("/:uId", getUserById);
 
-router.post("/signup", createUser);
+router.post(
+  "/signup",
+  [
+    check("name").not().isEmpty(),
+    check("email").isEmail(),
+    check("password").isLength({ min: 6 }),
+  ],
+  createUser
+);
 
 router.post("/login", loginUser);
 

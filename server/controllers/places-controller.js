@@ -1,4 +1,5 @@
-const httpError = require("../models/http-error");
+const HttpError = require("../models/http-error");
+const { validationResult } = require("express-validator");
 
 let dummyData = [
   {
@@ -16,7 +17,7 @@ exports.getPlaceById = async (req, res, next) => {
 
     if (!place) {
       return next(
-        new httpError("Could not find place for the provided id", 404)
+        new HttpError("Could not find place for the provided id", 404)
       );
     }
     res.status(200).json({
@@ -36,7 +37,7 @@ exports.getPlacesByUSerId = async (req, res, next) => {
 
     if (!places) {
       return next(
-        new httpError("Could not find place for the provided user id", 404)
+        new HttpError("Could not find place for the provided user id", 404)
       );
     }
     res.json({
@@ -50,6 +51,13 @@ exports.getPlacesByUSerId = async (req, res, next) => {
 };
 
 exports.createPlace = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log(errors, "-------");
+    return next(
+      new HttpError("Invalid inputs passed. please check your data", 422)
+    );
+  }
   const { title, description, coordinates, address, creator } = req.body;
   const createdPlace = {
     id: Math.random(),
@@ -67,11 +75,18 @@ exports.createPlace = async (req, res, next) => {
       data: { place: createdPlace },
     });
   } catch (err) {
-    return next(new httpError(err, 404));
+    return next(new HttpError(err, 404));
   }
 };
 
 exports.updatePlace = async (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return next(
+      new HttpError("Invalid inputs passed. please check your data", 422)
+    );
+  }
   const { pid } = req.params;
   const { title, description } = req.body;
   const updatedPlace = {
@@ -93,12 +108,16 @@ exports.updatePlace = async (req, res, next) => {
       data: { place: updatedPlace },
     });
   } catch (err) {
-    return next(new httpError(err, 404));
+    return next(new HttpError(err, 404));
   }
 };
 
 exports.deletePlace = async (req, res, next) => {
   const { pId } = req.params;
+
+  if (!dummyData.find((p) => p.id === pId)) {
+    return next(new HttpError("Could not find a place for that id", 404));
+  }
 
   try {
     dummyData = await dummyData.filter((p) => p.id !== pId);
@@ -107,6 +126,6 @@ exports.deletePlace = async (req, res, next) => {
       message: "place has been deleted successfully",
     });
   } catch (err) {
-    return next(new httpError(err, 404));
+    return next(new HttpError(err, 404));
   }
 };

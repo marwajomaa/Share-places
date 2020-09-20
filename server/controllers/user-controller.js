@@ -1,5 +1,5 @@
 const HttpError = require("./../models/http-error");
-
+const { validationResult } = require("express-validator");
 let DUMMY_USERS = [
   {
     id: Math.random(),
@@ -21,6 +21,12 @@ exports.getAllUsers = async (req, res, next) => {
   }
 };
 exports.createUser = async (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return next(new HttpError("Invalid inputs", 422));
+  }
+
   const data = req.body;
   const { name, email, password } = data;
   const newUser = {
@@ -54,6 +60,7 @@ exports.createUser = async (req, res, next) => {
 exports.loginUser = async (req, res, next) => {
   const data = req.body;
   const { email, password } = data;
+
   try {
     const user = DUMMY_USERS.find((user) => user.email === email);
 
