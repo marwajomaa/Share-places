@@ -1,5 +1,6 @@
 const HttpError = require("../models/http-error");
 const { validationResult } = require("express-validator");
+const Place = require("../models/place");
 
 let dummyData = [
   {
@@ -59,24 +60,26 @@ exports.createPlace = async (req, res, next) => {
     );
   }
 
-  const { title, description, coordinates, address, creator } = req.body;
-  const createdPlace = {
-    id: Math.random(),
+  const { title, description, location, image, address, creator } = req.body;
+  const place = {
     title,
     description,
     address,
     creator,
-    location: coordinates,
+    image,
+    location,
   };
   try {
-    await dummyData.push(createdPlace);
+    const createdPlace = await new Place(place);
+    await createdPlace.save();
+
     res.status(200).json({
       status: "success",
       message: "place has been added successfully",
       data: { place: createdPlace },
     });
   } catch (err) {
-    return next(new HttpError(err, 404));
+    return next(new HttpError(err.message, 404));
   }
 };
 
