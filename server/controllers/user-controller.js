@@ -1,5 +1,6 @@
 const HttpError = require("./../models/http-error");
 const { validationResult } = require("express-validator");
+const User = require("./../models/user");
 let DUMMY_USERS = [
   {
     id: Math.random(),
@@ -17,32 +18,39 @@ exports.createUser = async (req, res, next) => {
   }
 
   const data = req.body;
-  const { name, email, password } = data;
-  const newUser = {
-    id: Math.random(),
-    name,
-    email,
-    password,
-  };
+  const { name, email, password, image, places } = data;
 
-  const hasUser = DUMMY_USERS.find((u) => u.email === email);
+  let existingUser;
+  try {
+    existingUser = await User.findOne({ email: email });
+  } catch (err) {
+    return next(new HttpError("Could not signup, please try again later", 500));
+  }
 
-  if (hasUser) {
+  if (existingUser) {
     return next(
       new HttpError("Could not create user, email already exists", 422)
     );
   }
 
-  const user = await DUMMY_USERS.push(newUser);
+  const newUser = {
+    name,
+    email,
+    password,
+    image,
+    places,
+  };
 
-  res.status(200).json({
-    status: "success",
-    message: "user has been successfully created",
-    users: DUMMY_USERS,
-  });
   try {
+    const createdUser = await new User(newUser);
+    await createdUser.save();
+    res.status(200).json({
+      status: "success",
+      message: "Signing up successfully",
+      user: createdUser.toObject({ getters: true }),
+    });
   } catch (err) {
-    next(new HttpError("Something went wrong", 500));
+    return next(new HttpError(err.message, 500));
   }
 };
 

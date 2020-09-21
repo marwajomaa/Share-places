@@ -17,15 +17,15 @@ router.get("/:pId", getPlaceById);
 //get specific place for specific user
 router.get("/user/:uId", getPlacesByUSerId);
 
-router.post(
-  "/",
-  [
-    check("title").not().isEmpty(),
-    check("description").isLength({ min: 5 }),
-    check("address").not().isEmpty(),
-  ],
-  createPlace
-);
+// router.post(
+//   "/",
+//   [
+//     check("title").not().isEmpty(),
+//     check("description").isLength({ min: 5 }),
+//     check("address").not().isEmpty(),
+//   ],
+//   createPlace
+// );
 
 router.patch(
   "/:pId",
