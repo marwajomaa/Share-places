@@ -91,20 +91,14 @@ exports.updatePlace = async (req, res, next) => {
       new HttpError("Invalid inputs passed. please check your data", 422)
     );
   }
-  const { pid } = req.params;
+  const { pid: id } = req.params;
   const { title, description } = req.body;
-  const updatedPlace = {
+  const place = {
     title,
     description,
   };
   try {
-    const updatedPlace = await { ...dummyData.find((p) => p.id === pid) };
-    const placeIndex = await { ...dummyData.findIndex((p) => p.id === pid) };
-
-    updatedPlace.title = title;
-    updatedPlace.description = description;
-
-    dummyData[placeIndex] = updatedPlace;
+    const updatedPlace = await Place.findByIdAndUpdate(id, place);
 
     res.status(200).json({
       status: "success",
@@ -112,7 +106,7 @@ exports.updatePlace = async (req, res, next) => {
       data: { place: updatedPlace },
     });
   } catch (err) {
-    return next(new HttpError(err, 404));
+    return next(new HttpError(err.message, 404));
   }
 };
 
