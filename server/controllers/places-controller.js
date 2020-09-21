@@ -13,8 +13,8 @@ let dummyData = [
 
 exports.getPlaceById = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const place = dummyData.find((p) => p.id === id);
+    const { pId: id } = req.params;
+    const place = await Place.findById(id);
 
     if (!place) {
       return next(
@@ -23,7 +23,7 @@ exports.getPlaceById = async (req, res, next) => {
     }
     res.status(200).json({
       status: "success",
-      message: `places middleware runs for ${id}`,
+      message: `place with the provided id: ${id} founded`,
       data: place,
     });
   } catch (err) {
@@ -91,7 +91,8 @@ exports.updatePlace = async (req, res, next) => {
       new HttpError("Invalid inputs passed. please check your data", 422)
     );
   }
-  const { pid: id } = req.params;
+  const { pId: id } = req.params;
+
   const { title, description } = req.body;
   const place = {
     title,
