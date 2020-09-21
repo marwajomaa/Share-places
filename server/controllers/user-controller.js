@@ -23,7 +23,7 @@ exports.createUser = async (req, res, next) => {
   }
 
   const data = req.body;
-  const { name, email, password, image, places } = data;
+  const { name, email, password, image } = data;
 
   let existingUser;
   try {
@@ -43,7 +43,7 @@ exports.createUser = async (req, res, next) => {
     email,
     password,
     image,
-    places,
+    places: [],
   };
 
   try {

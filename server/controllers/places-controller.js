@@ -54,58 +54,58 @@ exports.getPlacesByUSerId = async (req, res, next) => {
   }
 };
 
-// exports.createPlace = async (req, res, next) => {
-//   const errors = validationResult(req);
+exports.createPlace = async (req, res, next) => {
+  const errors = validationResult(req);
 
-//   if (!errors.isEmpty()) {
-//     return next(
-//       new HttpError("Invalid inputs passed. please check your data", 422)
-//     );
-//   }
+  if (!errors.isEmpty()) {
+    return next(
+      new HttpError("Invalid inputs passed. please check your data", 422)
+    );
+  }
 
-//   const { title, description, location, image, address, creator } = req.body;
-//   const place = {
-//     title,
-//     description,
-//     address,
-//     creator,
-//     image,
-//     location,
-//   };
+  const { title, description, location, image, address, creator } = req.body;
 
-//   //check for creator
-//   let user;
+  //check for creator
+  let user;
 
-//   try {
-//     user = await User.findById(creator);
-//   } catch (err) {
-//     return next(new HttpError("Creating place failed, please try again", 500));
-//   }
+  try {
+    user = await User.findById(creator);
+  } catch (err) {
+    return next(new HttpError("Creating place failed, please try again", 500));
+  }
 
-//   if (!user) {
-//     return next(new HttpError("could not find the user for the provided id"));
-//   }
+  if (!user) {
+    return next(new HttpError("could not find the user for the provided id"));
+  }
 
-//   try {
-//     //user founded then create place and add place id to user(creator) using trans
-//     const sess = await mongoose.startSession();
-//     sess.startTransaction();
-//     //save place
-//     const createdPlace = await place.save({ session: sess });
-//     //add place id to user(creator)document
-//     await User.places.push(createdPlace);
-//     await User.save({ session: see });
-//     await sess.commitTransaction();
+  try {
+    const place = new Place({
+      title,
+      description,
+      address,
+      creator,
+      image,
+      location,
+    });
+    //user founded then create place and add place id to user(creator) using trans
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    //save place
+    const createdPlace = await place.save({ session: sess });
+    //add place id to user(creator)document
+    await user.places.push(createdPlace);
+    await user.save({ session: sess });
+    await sess.commitTransaction();
 
-//     res.status(200).json({
-//       status: "success",
-//       message: "place has been added successfully",
-//       place: createdPlace,
-//     });
-//   } catch (err) {
-//     return next(new HttpError(err.message, 404));
-//   }
-// };
+    res.status(200).json({
+      status: "success",
+      message: "place has been added successfully",
+      place: createdPlace,
+    });
+  } catch (err) {
+    return next(new HttpError(err.message, 404));
+  }
+};
 
 exports.updatePlace = async (req, res, next) => {
   const errors = validationResult(req);
