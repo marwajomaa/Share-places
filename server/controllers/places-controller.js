@@ -113,14 +113,17 @@ exports.updatePlace = async (req, res, next) => {
 };
 
 exports.deletePlace = async (req, res, next) => {
-  const { pId } = req.params;
+  const { pId: id } = req.params;
 
-  if (!dummyData.find((p) => p.id === pId)) {
+  const place = await Place.findById(id);
+
+  if (!place) {
     return next(new HttpError("Could not find a place for that id", 404));
   }
 
   try {
-    dummyData = await dummyData.filter((p) => p.id !== pId);
+    await Place.findByIdAndDelete(id);
+
     res.status(200).json({
       status: "success",
       message: "place has been deleted successfully",
