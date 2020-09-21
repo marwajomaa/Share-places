@@ -23,7 +23,7 @@ exports.getPlaceById = async (req, res, next) => {
     }
     res.status(200).json({
       status: "success",
-      message: `place with the provided id: ${id} founded`,
+      message: `place with the provided id founded`,
       data: place,
     });
   } catch (err) {
@@ -33,8 +33,9 @@ exports.getPlaceById = async (req, res, next) => {
 
 exports.getPlacesByUSerId = async (req, res, next) => {
   try {
-    const { uId } = req.params;
-    const places = dummyData.filter((p) => p.creator === uId);
+    const { uId: id } = req.params;
+
+    const places = await Place.find({ creator: id });
 
     if (!places) {
       return next(
@@ -43,7 +44,7 @@ exports.getPlacesByUSerId = async (req, res, next) => {
     }
     res.json({
       status: "success",
-      message: `places middleware runs for ${uId}`,
+      message: `places with the provided user id founded`,
       data: places,
     });
   } catch (err) {
