@@ -2,6 +2,19 @@ const HttpError = require("./../models/http-error");
 const { validationResult } = require("express-validator");
 const User = require("./../models/user");
 
+exports.getAllUsers = async (req, res, next) => {
+  try {
+    const users = await User.find();
+    res.status(200).json({
+      status: "success",
+      message: "Users successfully fetched",
+      users: { users },
+    });
+  } catch (err) {
+    return next(new HttpError("Could not fetch users, please try again later"));
+  }
+};
+
 exports.createUser = async (req, res, next) => {
   const errors = validationResult(req);
 
