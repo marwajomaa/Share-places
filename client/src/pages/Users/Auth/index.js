@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import axios from "axios";
 
 import Input from "../../../common/Input";
 import Button from "../../../common/Button";
@@ -57,13 +58,35 @@ const Auth = () => {
     setIsSignup(!isSignup);
   };
 
-  const authSubmitHandler = (e) => {
+  const authSubmitHandler = async (e) => {
     e.preventDefault();
-    console.log("====================================");
-    console.log(formState.inputs, formState.isFormValid);
-    console.log("====================================");
-    login();
+    if (isSignup) {
+      try {
+        const data = {
+          name: formState.inputs.name.value,
+          email: formState.inputs.email.value,
+          password: formState.inputs.password.value,
+        };
+
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+
+        // Request body
+
+        const response = await axios.post("api/users/signup", data);
+        console.log(response.data, "--------------");
+      } catch (err) {
+        console.log(err);
+      }
+      login();
+    } else {
+      console.log("hi");
+    }
   };
+
   return (
     <>
       <Title label="Login to your account" />
