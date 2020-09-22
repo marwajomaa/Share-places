@@ -4,15 +4,6 @@ const Place = require("../models/place");
 const mongoose = require("mongoose");
 const User = require("../models/user");
 
-let dummyData = [
-  {
-    id: "p1",
-    address: "jfhlzf",
-    decription: "sdjzhglkjgflFJBSL",
-    creator: "u1",
-  },
-];
-
 exports.getPlaceById = async (req, res, next) => {
   try {
     const { pId: id } = req.params;
