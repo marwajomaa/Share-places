@@ -13,16 +13,16 @@ import {
   VALIDATOR_MINLENGTH,
 } from "../../../utils/validators";
 import { useForm } from "../../../hooks/form-hook";
+import { useHttpClient } from "../../../hooks/http-hook";
 import { AuthContext } from "../../../context/auth-context";
 import "./style.css";
 
 const Auth = () => {
   const auth = useContext(AuthContext);
   const { login } = auth;
-
   const [isSignup, setIsSignup] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setError] = useState();
+
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -63,39 +63,37 @@ const Auth = () => {
   };
 
   const authSubmitHandler = async (e) => {
-    setIsLoading(true);
     e.preventDefault();
+
     if (isSignup) {
+      const data = {
+        name: formState.inputs.name.value,
+        email: formState.inputs.email.value,
+        password: formState.inputs.password.value,
+      };
+      try {
+        await sendRequest("api/users/signup", "post", data);
+        // login();
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
       try {
         const data = {
-          name: formState.inputs.name.value,
           email: formState.inputs.email.value,
           password: formState.inputs.password.value,
         };
 
-        const response = await axios.post("api/users/signup", data);
-        console.log(response);
-        if (!response.status === 200) {
-          throw new Error(
-            response.message || "Something wrong in fetching data"
-          );
-        }
-        setIsLoading(false);
+        await sendRequest("api/users/login", "post", data);
+        // login();
       } catch (err) {
-        console.log(err.response.data.error);
-        setError(
-          err.response.data.error || "Something went wrong, please try again"
-        );
-        setIsLoading(false);
+        console.log(err);
       }
-      // login();
-    } else {
-      console.log("hi");
     }
   };
 
   const handleError = () => {
-    setError();
+    clearError();
   };
 
   return (
@@ -104,8 +102,8 @@ const Auth = () => {
       <Card className="authentication">
         {isLoading ? (
           <LoadingSpinner asOverlay />
-        ) : isError ? (
-          <ErrorModal error={isError} onClear={handleError} />
+        ) : error ? (
+          <ErrorModal error={error} onClear={handleError} />
         ) : (
           <>
             <h2 className="authentication__header">{`${
