@@ -72,8 +72,8 @@ const Auth = () => {
         password: formState.inputs.password.value,
       };
       try {
-        await sendRequest("api/users/signup", "post", data);
-        // login();
+        const res = await sendRequest("api/users/signup", "post", data);
+        login(res.data.user._id);
       } catch (err) {
         console.log(err);
       }
@@ -84,8 +84,9 @@ const Auth = () => {
           password: formState.inputs.password.value,
         };
 
-        await sendRequest("api/users/login", "post", data);
-        // login();
+        const res = await sendRequest("api/users/login", "post", data);
+        console.log(res.data.user._id);
+        login(res.data.user._id);
       } catch (err) {
         console.log(err);
       }

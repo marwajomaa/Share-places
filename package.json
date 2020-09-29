@@ -19,6 +19,7 @@
   "homepage": "https://github.com/marwajomaa/mern-stack#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "boom": "^7.3.0",
     "dotenv": "^8.2.0",
     "env": "0.0.2",
     "express": "^4.17.1",
