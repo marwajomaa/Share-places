@@ -18,7 +18,7 @@ exports.getPlaceById = async (req, res, next) => {
     res.status(200).json({
       status: "success",
       message: `place with the provided id founded`,
-      data: place,
+      place: place,
     });
   } catch (err) {
     return next(new HttpError(err, 404));
