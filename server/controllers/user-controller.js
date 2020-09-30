@@ -65,7 +65,7 @@ exports.createUser = async (req, res, next) => {
 
 exports.loginUser = async (req, res, next) => {
   const data = req.body;
-  console.log(data, "1111111111111111111");
+
   const { email, password } = data;
 
   let existingUser;

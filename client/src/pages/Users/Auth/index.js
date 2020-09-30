@@ -75,7 +75,7 @@ const Auth = () => {
         const res = await sendRequest("api/users/signup", "post", data);
         login(res.data.user._id);
       } catch (err) {
-        console.log(err);
+        console.warn(err.message);
       }
     } else {
       try {
@@ -85,10 +85,10 @@ const Auth = () => {
         };
 
         const res = await sendRequest("api/users/login", "post", data);
-        console.log(res.data.user._id);
+
         login(res.data.user._id);
       } catch (err) {
-        console.log(err);
+        console.warn(err.message);
       }
     }
   };

@@ -41,14 +41,15 @@ const UpdatePlace = () => {
 
     const fetchPlace = async () => {
       try {
-        const res = await sendRequest(`/api/places/${placeId}`, { signal })
+        const res = await sendRequest(`/api/places/${placeId}`, "GET", {
+          signal,
+        })
           .then((response) => {
             return response;
           })
           .catch((e) => {
             console.warn(`Fetch 1 error: ${e.message}`);
           });
-        console.log(res.data.place);
         await setLoadedPlace(res.data.place);
         setFormData(
           {

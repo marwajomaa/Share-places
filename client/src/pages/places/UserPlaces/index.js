@@ -21,7 +21,7 @@ const UserPlaces = () => {
       const userPlaces = await sendRequest(`/api/places/user/${userId}`);
       setUserPlaces(userPlaces.data.data);
     } catch (err) {
-      console.log(err);
+      console.warn(err.message);
     }
   }, [sendRequest]);
 
