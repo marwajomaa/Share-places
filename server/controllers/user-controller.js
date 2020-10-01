@@ -1,4 +1,5 @@
 const boom = require("boom");
+const bcrypt = require("bcryptjs");
 const HttpError = require("./../models/http-error");
 const { validationResult } = require("express-validator");
 const User = require("./../models/user");
@@ -42,10 +43,17 @@ exports.createUser = async (req, res, next) => {
     return next(error);
   }
 
+  let hashedPassword;
+  try {
+    hashedPassword = await bcrypt.hash(password, 12);
+  } catch (err) {
+    return next(new HttpError("Could not create user, please try again"), 500);
+  }
+
   const newUser = {
     name,
     email,
-    password,
+    password: hashedPassword,
     image,
     places: [],
   };
