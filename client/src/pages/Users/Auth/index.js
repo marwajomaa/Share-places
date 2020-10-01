@@ -4,6 +4,7 @@ import Input from "../../../common/Input";
 import Button from "../../../common/Button";
 import Card from "../../../common/Card";
 import Title from "../../../common/Title";
+import ImageUpload from "../../../common/ImageUpload";
 import {
   VALIDATOR_REQUIRE,
   VALIDATOR_EMAIL,
@@ -39,6 +40,7 @@ const Auth = () => {
         {
           ...formState.inputs,
           name: undefined,
+          image: undefined,
         },
         formState.inputs.email.isValid && formState.inputs.password.isValid
       );
@@ -48,6 +50,10 @@ const Auth = () => {
           ...formState.inputs,
           name: {
             value: "",
+            isValid: false,
+          },
+          image: {
+            value: null,
             isValid: false,
           },
         },
@@ -84,6 +90,7 @@ const Auth = () => {
               onInput={inputHandler}
             />
           )}
+
           <Input
             type="email"
             element="input"
@@ -102,6 +109,7 @@ const Auth = () => {
             validators={[VALIDATOR_REQUIRE(), VALIDATOR_MINLENGTH(6)]}
             onInput={inputHandler}
           />
+          {isSignup && <ImageUpload id="image" center onInput={inputHandler} />}
           <Button type="submit" disabled={!formState.isFormValid}>
             {isSignup ? "SIGNUP" : "LOGIN"}
           </Button>
