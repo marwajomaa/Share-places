@@ -14,10 +14,11 @@ exports.getPlaceById = async (req, res, next) => {
         new HttpError("Could not find place for the provided id", 404)
       );
     }
+
     res.status(200).json({
       status: "success",
       message: `place with the provided id founded`,
-      data: place,
+      place: place,
     });
   } catch (err) {
     return next(new HttpError(err, 404));
@@ -35,6 +36,7 @@ exports.getPlacesByUSerId = async (req, res, next) => {
         new HttpError("Could not find place for the provided user id", 404)
       );
     }
+
     res.json({
       status: "success",
       message: `places with the provided user id founded`,

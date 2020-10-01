@@ -3,8 +3,8 @@ import UserItem from "../UserItem";
 import Card from "../../../common/Card";
 import "./style.css";
 
-const UsersList = (props) => {
-  if (!props.items) {
+const UsersList = ({ users }) => {
+  if (!users) {
     return (
       <div className="center">
         <Card>
@@ -16,7 +16,7 @@ const UsersList = (props) => {
 
   return (
     <ul>
-      {props.items.map((user) => (
+      {users.map((user) => (
         <UserItem key={user.id} {...user} />
       ))}
     </ul>

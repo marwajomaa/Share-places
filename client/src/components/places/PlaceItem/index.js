@@ -1,18 +1,24 @@
 import React, { useState, useContext } from "react";
+import { useParams } from "react-router-dom";
+import { Modal as AntdModal } from "antd";
+
 import Card from "../../../common/Card";
 import Button from "../../../common/Button";
 import Avatar from "../../../common/Avatar";
 import Modal from "../../../common/Modal";
 import Map from "../../../common/Map";
 import { AuthContext } from "../../../context/auth-context";
+import { useHttpClient } from "../../../hooks/http-hook";
 import "./style.css";
 
 const PlaceItem = ({ place }) => {
+  const placeId = useParams().pId;
   const auth = useContext(AuthContext);
   const { isLoggedIn } = auth;
-  const { id, imageUrl, title, description, address } = place;
+  const { _id: pId, imageUrl, title, description, address } = place;
   const [showMap, setShowMap] = useState(false);
   const [showWarningModal, setShowWarningModal] = useState(false);
+  const { error, sendRequest, clearError } = useHttpClient();
 
   const openMapHandler = () => setShowMap(true);
 
@@ -22,9 +28,20 @@ const PlaceItem = ({ place }) => {
 
   const closeWarningModalHandler = () => setShowWarningModal(false);
 
+  const deletePlace = async () => {
+    let res;
+    try {
+      res = await sendRequest(`/api/places/${pId}`, "DELETE");
+      setShowWarningModal(false);
+      return AntdModal.success({
+        content: "Place has been successfully deleted",
+      });
+    } catch {}
+  };
+
   return (
     <>
-      <Modal
+      {/* <Modal
         show={showMap}
         onCancel={closeMapHandler}
         header={address}
@@ -35,7 +52,7 @@ const PlaceItem = ({ place }) => {
         <div className="map-container">
           <Map lat={place.location.lat} lon={place.location.lon} />
         </div>
-      </Modal>
+      </Modal> */}
       <Modal
         show={showWarningModal}
         onCancel={closeWarningModalHandler}
@@ -45,7 +62,7 @@ const PlaceItem = ({ place }) => {
         footer={
           <>
             <Button onClick={closeWarningModalHandler}>Close</Button>
-            <Button onClick={() => {}} inverse>
+            <Button onClick={deletePlace} inverse>
               Confirm
             </Button>
           </>
@@ -74,7 +91,7 @@ const PlaceItem = ({ place }) => {
             </Button>
             {isLoggedIn && (
               <>
-                <Button to={`/places/${id}`}>EDIT</Button>
+                <Button to={`/places/${pId}`}>EDIT</Button>
                 <Button danger onClick={openWarningModalHandler}>
                   DELETE
                 </Button>

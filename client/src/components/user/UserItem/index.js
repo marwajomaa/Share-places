@@ -4,7 +4,7 @@ import Avatar from "../../../common/Avatar";
 import Card from "./../../../common/Card";
 import "./UserItem.css";
 
-const UserItem = ({ id, image, name, placesCount }) => {
+const UserItem = ({ id, image, name, places }) => {
   return (
     <li className="user-item">
       <Card className="user-item__content">
@@ -15,7 +15,7 @@ const UserItem = ({ id, image, name, placesCount }) => {
           <div className="user-item__info">
             <h2>{name}</h2>
             <h3>
-              {placesCount} {placesCount === 1 ? "place" : "places"}
+              {places.length} {places.length === 1 ? "place" : "places"}
             </h3>
           </div>
         </Link>

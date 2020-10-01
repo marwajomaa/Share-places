@@ -6,7 +6,8 @@ import PlaceItem from "../PlaceItem";
 import "./style.css";
 
 const PlaceList = ({ places }) => {
-  if (places.length === 0) {
+  console.log(places, "000000000000000000000");
+  if (!places) {
     return (
       <div className="place-list center">
         <Card>

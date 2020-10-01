@@ -1,3 +1,4 @@
+const boom = require("boom");
 const HttpError = require("./../models/http-error");
 const { validationResult } = require("express-validator");
 const User = require("./../models/user");
@@ -33,9 +34,12 @@ exports.createUser = async (req, res, next) => {
   }
 
   if (existingUser) {
-    return next(
-      new HttpError("Could not create user, email already exists", 422)
+    // return next(boom.badRequest("Could not create user, email already exists"));
+    const error = new HttpError(
+      "Could not create user, email already exists",
+      422
     );
+    return next(error);
   }
 
   const newUser = {
@@ -55,12 +59,13 @@ exports.createUser = async (req, res, next) => {
       user: createdUser.toObject({ getters: true }),
     });
   } catch (err) {
-    return next(new HttpError(err.message, 500));
+    return next(new HttpError("Could not sign up, please try again", 500));
   }
 };
 
 exports.loginUser = async (req, res, next) => {
   const data = req.body;
+
   const { email, password } = data;
 
   let existingUser;
@@ -77,6 +82,6 @@ exports.loginUser = async (req, res, next) => {
   res.status(200).json({
     status: "success",
     message: "Logged in",
-    user: { existingUser },
+    user: existingUser,
   });
 };
