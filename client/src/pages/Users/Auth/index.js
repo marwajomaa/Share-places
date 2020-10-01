@@ -72,14 +72,15 @@ const Auth = () => {
     e.preventDefault();
 
     if (isSignup) {
-      const data = {
-        name: formState.inputs.name.value,
-        email: formState.inputs.email.value,
-        password: formState.inputs.password.value,
-        image: formState.inputs.image.value,
-      };
+      const formData = new FormData();
+
+      formData.append("name", formState.inputs.name.value);
+      formData.append("email", formState.inputs.email.value);
+      formData.append("password", formState.inputs.password.value);
+      formData.append("image", formState.inputs.image.value);
+
       try {
-        const res = await sendRequest("api/users/signup", "post", data);
+        const res = await sendRequest("api/users/signup", "post", formData);
         login(res.data.user._id);
       } catch (err) {
         console.warn(err.message);
@@ -90,7 +91,6 @@ const Auth = () => {
           email: formState.inputs.email.value,
           password: formState.inputs.password.value,
         };
-        console.log(data, "ppppppppppppppp");
 
         const res = await sendRequest("api/users/login", "post", data);
 
