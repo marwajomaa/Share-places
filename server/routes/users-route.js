@@ -1,5 +1,6 @@
 const express = require("express");
 const { check } = require("express-validator");
+const fileUpload = require("../middleware/file-upload");
 
 const router = express.Router();
 
@@ -9,8 +10,11 @@ const {
   loginUser,
 } = require("./../controllers/user-controller");
 
+router.get("/", getAllUsers);
+
 router.post(
   "/signup",
+  fileUpload.single("image"),
   [
     check("name").not().isEmpty(),
     check("email").isEmail(),
@@ -18,7 +22,7 @@ router.post(
   ],
   createUser
 );
-
+console.log("heeeeeeeeeeell");
 router.post("/login", loginUser);
 
 module.exports = router;

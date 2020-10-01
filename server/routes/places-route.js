@@ -12,7 +12,7 @@ const {
 } = require("../controllers/places-controller");
 
 //get specific place from it's id
-router.get("/:id", getPlaceById);
+router.get("/:pId", getPlaceById);
 
 //get specific place for specific user
 router.get("/user/:uId", getPlacesByUSerId);
@@ -28,11 +28,11 @@ router.post(
 );
 
 router.patch(
-  "/:pid",
+  "/:pId",
   [check("title").not().isEmpty(), check("description").isLength({ min: 5 })],
   updatePlace
 );
 
-router.delete("/:pid", deletePlace);
+router.delete("/:pId", deletePlace);
 
 module.exports = router;

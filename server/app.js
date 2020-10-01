@@ -28,11 +28,16 @@ app.use(async (req, res, next) => {
 
 //Middleware that handles error for every request
 app.use((err, req, res, next) => {
-  if (res.headerSent) {
-    return next(err);
+  if (err.isBoom) {
+    // for boom errors
+    res.status(err.output.statusCode || 500);
+    console.log(err.message, err.output.statusCode, "------------");
+  } else {
+    res.status(err.code || 500);
+    console.log(err.code, "............");
   }
-  res.status(err.code || 500);
-  res.json({ message: err.message || "AnUnKnown error has occurred" });
+  console.log(err.message);
+  res.json({ error: err.message || "AnUnKnown error has occurred" });
 });
 
 module.exports = app;
