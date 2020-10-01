@@ -16,13 +16,16 @@ const UserPlaces = () => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [userPlaces, setUserPlaces] = useState();
 
-  useEffect(async () => {
-    try {
-      const userPlaces = await sendRequest(`/api/places/user/${userId}`);
-      setUserPlaces(userPlaces.data.data);
-    } catch (err) {
-      console.warn(err.message);
-    }
+  useEffect(() => {
+    const fetchUserPlaces = async () => {
+      try {
+        const userPlaces = await sendRequest(`/api/places/user/${userId}`);
+        setUserPlaces(userPlaces.data.data);
+      } catch (err) {
+        console.warn(err.message);
+      }
+    };
+    fetchUserPlaces();
   }, [sendRequest]);
 
   if (!userPlaces) {

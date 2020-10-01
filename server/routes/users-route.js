@@ -1,6 +1,6 @@
 const express = require("express");
 const { check } = require("express-validator");
-const fileUpload = require("../middleware/file-upload");
+const fileUpload = require("../middleware/file-upload.js");
 
 const router = express.Router();
 
@@ -22,7 +22,7 @@ router.post(
   ],
   createUser
 );
-console.log("heeeeeeeeeeell");
+
 router.post("/login", loginUser);
 
 module.exports = router;
