@@ -1,5 +1,6 @@
 const express = require("express");
 const { check } = require("express-validator");
+const checkAuth = require("../middleware/check-auth");
 
 const router = express.Router();
 
@@ -16,6 +17,9 @@ router.get("/:pId", getPlaceById);
 
 //get specific place for specific user
 router.get("/user/:uId", getPlacesByUSerId);
+
+//check auth for the protected routes
+router.use(checkAuth);
 
 router.post(
   "/",
