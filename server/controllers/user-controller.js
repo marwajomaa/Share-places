@@ -1,5 +1,6 @@
 const boom = require("boom");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const HttpError = require("./../models/http-error");
 const { validationResult } = require("express-validator");
 const User = require("./../models/user");
@@ -61,14 +62,28 @@ exports.createUser = async (req, res, next) => {
   try {
     const createdUser = await new User(newUser);
     await createdUser.save();
-    res.status(200).json({
-      status: "success",
-      message: "Signing up successfully",
-      user: createdUser.toObject({ getters: true }),
-    });
   } catch (err) {
     return next(new HttpError("Could not sign up, please try again", 500));
   }
+
+  let token = true;
+  try {
+    token = jwt.sign(
+      { userId: createdUser.id, email: createdUser.email },
+      "supersecret_dont_share",
+      { expiresIn: "24h" }
+    );
+  } catch (err) {
+    return next(new HttpError("Could not sign up, please try again", 500));
+  }
+
+  res.status(200).json({
+    status: "success",
+    message: "Signing up successfully",
+    userId: createdUser.id,
+    email: createdUser.email,
+    token: token,
+  });
 };
 
 exports.loginUser = async (req, res, next) => {
@@ -83,13 +98,41 @@ exports.loginUser = async (req, res, next) => {
     return next(new HttpError("Could not login, please try again later", 500));
   }
 
-  if (!existingUser || existingUser.password !== password) {
+  if (!existingUser) {
     return next(new HttpError("Invalid credentials could not log you in", 401));
+  }
+
+  let isValidPassword;
+  try {
+    isValidPassword = await bcrypt.compare(password, existingUser.password);
+  } catch (err) {
+    return next(
+      new HttpError(
+        "Could not log you in, please check your credentials and try again."
+      ),
+      500
+    );
+  }
+
+  if (!isValidPassword) {
+    return next(new HttpError("Invalid credentials could not log you in", 401));
+  }
+
+  let token = true;
+  try {
+    token = jwt.sign(
+      { userId: existingUser.id, email: existingUser.email },
+      "supersecret_dont_share",
+      { expiresIn: "24h" }
+    );
+  } catch (err) {
+    return next(new HttpError("Could not sign up, please try again", 500));
   }
 
   res.status(200).json({
     status: "success",
     message: "Logged in",
     user: existingUser,
+    token: token,
   });
 };
