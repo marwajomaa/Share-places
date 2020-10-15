@@ -73,7 +73,7 @@ const Auth = () => {
       };
       try {
         const res = await sendRequest("api/users/signup", "post", data);
-        login(res.data.user._id);
+        login(res.data.user._id, res.data.token);
       } catch (err) {
         console.warn(err.message);
       }
@@ -86,7 +86,7 @@ const Auth = () => {
 
         const res = await sendRequest("api/users/login", "post", data);
 
-        login(res.data.user._id);
+        login(res.data.user._id, res.data.token);
       } catch (err) {
         console.warn(err.message);
       }

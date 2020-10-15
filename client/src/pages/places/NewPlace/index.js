@@ -18,7 +18,7 @@ import "./style.css";
 const NewPlace = () => {
   const history = useHistory();
   const auth = useContext(AuthContext);
-  const { userId } = auth;
+  const { userId, token } = auth;
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
   const [formState, inputHandler] = useForm(
@@ -49,7 +49,9 @@ const NewPlace = () => {
     };
 
     try {
-      const res = await sendRequest("/api/places", "POST", data);
+      const res = await sendRequest("/api/places", "POST", data, {
+        Authorization: "Bearer" + token,
+      });
       history.push("/");
     } catch (err) {
       console.log(err);

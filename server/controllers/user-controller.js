@@ -19,6 +19,7 @@ exports.getAllUsers = async (req, res, next) => {
 };
 
 exports.createUser = async (req, res, next) => {
+  console.log(req.body, "oooooooooooo");
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -59,8 +60,9 @@ exports.createUser = async (req, res, next) => {
     places: [],
   };
 
+  let createdUser;
   try {
-    const createdUser = await new User(newUser);
+    createdUser = await new User(newUser);
     await createdUser.save();
   } catch (err) {
     return next(new HttpError("Could not sign up, please try again", 500));
