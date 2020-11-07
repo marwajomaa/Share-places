@@ -5,6 +5,7 @@ import Input from "../../../common/Input";
 import Button from "../../../common/Button";
 import Card from "../../../common/Card";
 import Title from "../../../common/Title";
+import ImageUpload from "../../../common/ImageUpload";
 import LoadingSpinner from "../../../common/LoadingSpinner";
 import ErrorModal from "../../../common/ErrorModal";
 import {
@@ -44,6 +45,7 @@ const Auth = () => {
         {
           ...formState.inputs,
           name: undefined,
+          image: undefined,
         },
         formState.inputs.email.isValid && formState.inputs.password.isValid
       );
@@ -53,6 +55,10 @@ const Auth = () => {
           ...formState.inputs,
           name: {
             value: "",
+            isValid: false,
+          },
+          image: {
+            value: null,
             isValid: false,
           },
         },
@@ -66,13 +72,14 @@ const Auth = () => {
     e.preventDefault();
 
     if (isSignup) {
-      const data = {
-        name: formState.inputs.name.value,
-        email: formState.inputs.email.value,
-        password: formState.inputs.password.value,
-      };
+      const formData = new FormData();
+      formData.append("email", formState.inputs.email.value);
+      formData.append("name", formState.inputs.name.value);
+      formData.append("password", formState.inputs.password.value);
+      formData.append("image", formState.inputs.image.value);
+
       try {
-        const res = await sendRequest("api/users/signup", "post", data);
+        const res = await sendRequest("api/users/signup", "post", formData);
         login(res.data.user._id);
       } catch (err) {
         console.warn(err.message);
@@ -141,6 +148,9 @@ const Auth = () => {
                 validators={[VALIDATOR_REQUIRE(), VALIDATOR_MINLENGTH(6)]}
                 onInput={inputHandler}
               />
+              {isSignup && (
+                <ImageUpload id="image" center onInput={inputHandler} />
+              )}
               <Button type="submit" disabled={!formState.isFormValid}>
                 {isSignup ? "SIGNUP" : "LOGIN"}
               </Button>

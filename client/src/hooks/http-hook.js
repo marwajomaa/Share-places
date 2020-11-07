@@ -14,9 +14,8 @@ export const useHttpClient = () => {
       activeHttpRequests.current.push(httpAbortCtrl);
 
       try {
-        const response = await axios({ url, method, data: body || null });
+        const response = await axios({ url, method, data: body });
 
-        console.log(response);
         activeHttpRequests.current = activeHttpRequests.current.filter(
           (reqCtrl) => reqCtrl !== httpAbortCtrl
         );

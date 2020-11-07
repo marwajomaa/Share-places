@@ -24,6 +24,7 @@ exports.createUser = async (req, res, next) => {
   }
 
   const data = req.body;
+  console.log(data, "++++++++++++++++++++++++++++");
   const { name, email, password, image } = data;
 
   let existingUser;

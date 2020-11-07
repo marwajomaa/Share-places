@@ -15,6 +15,10 @@ import {
   VALIDATOR_MINLENGTH,
 } from "../../../utils/validators";
 
+const placeObj = {
+  title: "",
+  description: "",
+};
 const UpdatePlace = () => {
   const placeId = useParams().pId;
   const [loadedPlace, setLoadedPlace] = useState();
